@@ -18,7 +18,6 @@ setwd("C:/Users/hthapa/OneDrive - Epsilon/Projects/Wingstop MMM/Modeling")
 storeDay<-read.csv("store by day dataset UPDATED.csv", stringsAsFactors = FALSE)
 
 ## Adding Dataset 
-
 storeDay <- `store week dataset LATEST`
 
 ## Market Status is already classified
@@ -60,7 +59,6 @@ tv$day  <- str_split_fixed(tv$yearDates, "/", n = 3)[,2]
 tv$year <- as.numeric(str_split_fixed(tv$yearDates, "/", n = 3)[,3]) + 2000
 tv$date <- paste(as.character(tv$year), tv$month, tv$day, sep="-") %>% ymd() %>% as.Date()
 
-
 dmaCounts<-storeDay %>%
   group_by(date, DMA_NAME) %>%
   summarise(DMAstorecount = n())
@@ -68,7 +66,6 @@ dmaCounts<-storeDay %>%
 nationalCounts<-storeDay %>%
   group_by(date) %>%
   summarise(Nationalstorecount = n())
-
 
 tvByStore<-left_join(x = tv[ , c("date", "tvspend")], y = nationalCounts, by = c("date" = "date"))
 tvByStore$tvspend<-tvByStore$tvspend/tvByStore$Nationalstorecount
@@ -121,8 +118,6 @@ media$OLVNationalSpend<-rowSums(media[ , c("National OLV 2017", "OLV National 20
 media$OLVSocialSpend<-rowSums(media[ , c("OLV Social 2017 National", "Engagement Facebook Natl 2017", "Engagement Natl Twitter 2017", "OLV Facebook National 2018", "OLV Twitter National 2018", "OLV Social National 2019")])
 media$DigitalSpend<-rowSums(media[ , c("OLOSocialSpend", "OLOSearchSpend", "OLODisplaySpend", "OLVNationalSpend", "OLVSocialSpend")])
 
-
-
 media<-media[ , c("StoreNo", "date", "DMA_NAME", "OLOSocialSpend", "OLOSearchSpend" , "OLODisplaySpend", "OLVSocialSpend", "OLVNationalSpend", "DigitalSpend", "Nationalstorecount", "DMAstorecount")]
 
 mediaVars<-c("OLOSocialSpend", "OLOSearchSpend" , "OLODisplaySpend", "OLVSocialSpend", "OLVNationalSpend", "DigitalSpend")
@@ -134,13 +129,11 @@ for (med in mediaVars){
   eval(parse(text = text2))
 }
 
-
 media<-left_join(x = media, y = tv[ , c("date", "tvspend")], by = c("date" = "date"))
 media$tvspend<-media$tvspend/media$Nationalstorecount
 media$AdSpend<-rowSums(media[ , c("DigitalSpend", "tvspend")])
 
 media<-media[ , c("StoreNo", "date", "OLOSocialSpend", "OLOSearchSpend" , "OLODisplaySpend", "OLVSocialSpend", "OLVNationalSpend", "DigitalSpend", "tvspend")]
-
 
 storeDay<-storeDay[ , !names(storeDay) %in% c("OLOSocialSpend", "OLOSearchSpend" , "OLODisplaySpend", "OLVSocialSpend", "OLVNationalSpend", "DigitalSpend", "tvspend")]
 
@@ -196,8 +189,6 @@ plotData$date<-as.Date(plotData$date)
 ggplot(plotData, aes(x = date, y = trend)) + geom_line() + 
   geom_line(plotData, mapping = aes(x = date, y = seasonal), color = "blue") + geom_line(plotData, mapping =  aes(x = date, y = remainder),color = "red" ) + ylim(c(-3000, 30000)) + ylab("Average Store Sales")
 write.csv(stl_national$time.series, "national average store sales trend data.csv")
-
-
 
 nationalWeekTS <- ts(nationalWeek$TransactionCount, frequency = 52)
 stl_national = stl(nationalWeekTS, "periodic")
@@ -266,29 +257,29 @@ deliverystores<-deliverystores[deliverystores$StoreNo %in% deliverystores50 & de
 
 DeliverySales<-sqldf('
                      SELECT
-                     WeeksFromDelivery
-                     ,DeliveryWave
+                       WeeksFromDelivery
+                     , DeliveryWave
                      
-                     ,sum(TotalItemSales)
-                     ,sum(TotalComps)
-                     ,sum(TotalPromos)
-                     ,sum(TotalNetSales)
-                     ,sum(totalDelivery)
-                     ,sum(webMobileSales)
-                     ,sum(appSales)
-                     ,sum(webMobileSales)/sum(TotalItemSales) as webMobilepct
-                     ,sum(appSales)/sum(TotalItemSales) as apppct
-                     ,sum(WalkToGoSales)
-                     ,sum(CallToGoSales)
-                     ,sum(WalkDineInSales)
-                     ,sum(CallDineInSales)
-                    ,sum(DeliverySales)
-                     ,sum(DDDeliverySales)
-                     ,sum(DoorDashDeliverySales)
+                     , sum(TotalItemSales)
+                     , sum(TotalComps)
+                     , sum(TotalPromos)
+                     , sum(TotalNetSales)
+                     , sum(totalDelivery)
+                     , sum(webMobileSales)
+                     , sum(appSales)
+                     , sum(webMobileSales)/sum(TotalItemSales) as webMobilepct
+                     , sum(appSales)/sum(TotalItemSales) as apppct
+                     , sum(WalkToGoSales)
+                     , sum(CallToGoSales)
+                     , sum(WalkDineInSales)
+                     , sum(CallDineInSales)
+                     , sum(DeliverySales)
+                     , sum(DDDeliverySales)
+                     , sum(DoorDashDeliverySales)
                      , (sum(DeliverySales) + sum(DDDeliverySales) + sum(DoorDashDeliverySales))/sum(TotalItemSales) as totalDeliverypct
-                     ,(sum(DeliverySales))/sum(TotalItemSales) as Deliverypct
-                     ,(sum(DDDeliverySales))/sum(TotalItemSales) as DDDeliverypct
-                     ,(sum(DoorDashDeliverySales))/sum(TotalItemSales) as DoorDashDeliverypct
+                     , (sum(DeliverySales))/sum(TotalItemSales) as Deliverypct
+                     , (sum(DDDeliverySales))/sum(TotalItemSales) as DDDeliverypct
+                     , (sum(DoorDashDeliverySales))/sum(TotalItemSales) as DoorDashDeliverypct
                      , sum(CallDineInSales)/sum(TotalItemSales) as CallDineInpct
                      , sum(WalkDineInSales)/sum(TotalItemSales) as WalkDineInpct
                      , sum(CallToGoSales)/sum(TotalItemSales) as CallToGopct
@@ -297,10 +288,7 @@ DeliverySales<-sqldf('
                       , (sum(internalDeliveryTransactions) + sum(externalDeliveryTransactions))/sum(TransactionCount) as totalDeliveryTransactionspct
  ,cast((sum(DeliveryTransactions))/sum(TransactionCount) as float)  as DeliveryTransactionspct
  ,cast((sum(DDDeliveryTransactions))/sum(TransactionCount) as float)  as DDDeliveryTransactionspct
-
-
 , cast(cast(sum(DoorDashDeliveryTransactions) as float)/sum(TransactionCount) as float)  as DoorDashDeliveryTransactionspct
-
 , cast(sum(internalDeliveryTransactions)/sum(TransactionCount) as float)  as internalDeliveryTransactionspct
 , cast(sum(externalDeliveryTransactions)/sum(TransactionCount) as float)  as externalDeliveryTransactionspct
                      , cast(sum(webMobileTransactions)/sum(TransactionCount) as float) as webMobileTransactionspct
@@ -385,7 +373,6 @@ deliverystores$prepost<-ifelse(deliverystores$WeeksFromDelivery < 0, "before", "
 DeliverySales<-sqldf('
                      SELECT
                      prepost
-                     
                      ,sum(TotalItemSales)
                      ,sum(TotalComps)
                      ,sum(TotalPromos)
@@ -2047,9 +2034,6 @@ p <- ggplot(data = ssalesfit, aes(x= reorder(as.factor(Category),desc(inc)),y = 
 
 p
 
-
-
-
 transWaterfall<-read.csv("transactions waterfall output full contribution.csv", stringsAsFactors = FALSE)
 
 ssalesfit <- transWaterfall %>%
@@ -2079,7 +2063,6 @@ p <- ggplot(data = ssalesfit, aes(x= reorder(as.factor(Category),desc(inc)),y = 
   )
 
 p
-
 
 ssalesfit <- transWaterfall %>%
   filter(Significant == 1) %>%
@@ -2119,7 +2102,6 @@ saveRDS(storeWeek, "store week data.RDS")
 ###############################
 ##### national model ##########
 ###############################
-
 
 dmaStorePcts<-storeWeek[storeWeek$marketStatus %in% c("Core", "Developing"),] %>%
   group_by(DMA_NAME, week) %>%

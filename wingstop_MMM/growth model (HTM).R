@@ -3,7 +3,7 @@ storeWeekFinal <- read.csv("C:/Users/hthapa/OneDrive - Epsilon/Projects/Wingstop
 
 storeMonth<-sqldf('
                  SELECT
-                 StoreNo
+                   StoreNo
                  , marketStatus
                  , DMA_NAME
                  , month

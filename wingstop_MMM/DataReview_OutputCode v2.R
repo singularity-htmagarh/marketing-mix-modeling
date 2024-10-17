@@ -74,7 +74,7 @@ Sum52x2018_New <-sqldf('SELECT
 ### =========================================================================================================================
 
 newStore30weeks <-sqldf('SELECT
-                 YEAR, week,
+                  YEAR, week,
                  newStore30weeks
                     ,AVG(TotalItemSales) as Avg_Sales
                     ,AVG(TransactionCount) as TransCount
@@ -93,8 +93,8 @@ write.csv(newStore30weeks, "C:/Users/hthapa/OneDrive - Epsilon/Projects/Wingstop
 ### =========================================================================================================================
 
 AnyDeliveryWaterfall <- sqldf('SELECT
-                 week,
-                 year
+                              week,
+                              year
                     ,AVG(TotalItemSales) as Avg_Sales
                     ,AVG(TransactionCount) as TransCount
                     ,SUM(TotalItemSales) as TotalItemSales
